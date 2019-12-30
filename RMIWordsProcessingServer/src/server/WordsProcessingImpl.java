@@ -22,7 +22,7 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 	private static final long serialVersionUID = 1L;
 	String dir = "D:\\Test";
 	// HashMap<String, File> file;
-	// HashMap<File, Text> text;
+	// HashMap<String, Text> text;
 
 	File fileIn;
 	BufferedReader read;
