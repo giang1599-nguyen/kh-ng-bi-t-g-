@@ -21,11 +21,8 @@ import model.User;
 public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsProcessing {
 	private static final long serialVersionUID = 1L;
 	String dir = "D:\\Test";
-	HashMap<String, BufferedReader> input;// đọc dữ liệu
-	HashMap<String, BufferedOutputStream> output;// ghi dữ liệu
-
 	// HashMap<String, File> file;
-	// HashMap<String, Text> text;
+	// HashMap<File, Text> text;
 
 	File fileIn;
 	BufferedReader read;
