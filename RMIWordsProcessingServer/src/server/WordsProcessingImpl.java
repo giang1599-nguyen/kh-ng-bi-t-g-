@@ -24,13 +24,14 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 	File fileIn;
 	Data data = new Data();
 	ArrayList<User> listU = new ArrayList<>();
-	ArrayList<File> listFile = new ArrayList<>();
+	static ArrayList<File> listFile = new ArrayList<>();
 	private BufferedReader bis;
 	private PrintWriter pw;
-
+	int count;
 	public WordsProcessingImpl() throws IOException {
 		this.data = new Data();
 		this.listU = data.listU();
+		count = listFile.size();
 	}
 
 	@Override
@@ -50,9 +51,9 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 	@Override
 	public int checkPass(String username, String pass) throws RemoteException {
 		try {
-			int count = 0;
+			
 			if (data.checkPass(username, pass)) {
-				File temp = new File(dir + File.separator + "client-" + count++ + ".txt");
+				File temp = new File(dir + File.separator + "client-" + ++count + ".txt");
 				temp.createNewFile();
 				listFile.add(temp);
 			}

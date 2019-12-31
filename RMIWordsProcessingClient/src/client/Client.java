@@ -15,7 +15,7 @@ public class Client {
 	private BufferedReader userIn;
 	String command;
 	String pagam;
-	int id;
+	static int id;
 
 	private enum userStatus {
 		NOTLOGGEDIN, ENTEREDUSERNAME, LOGGEDIN
