@@ -11,17 +11,17 @@ public interface IWordsProcessing extends Remote {
 
 	boolean checkUserExists(String username) throws RemoteException;
 
-	boolean checkPass(String username, String pass) throws RemoteException;
+	int checkPass(String username, String pass) throws RemoteException;
 
-	boolean addFile(File file) throws RemoteException;// dowload khi client upload
+	boolean addFile(int id, File file) throws RemoteException;// download khi client upload
 
-	boolean addText(String id, String text) throws RemoteException; // thêm 1 dòng văn bản vào file
+	boolean addText(int id, String text) throws RemoteException; // thêm 1 dòng văn bản vào file
 
-	int getNums(String id) throws RemoteException;// trả về số lượng các từ là số có trong file
+	int getNums(int id) throws RemoteException;// trả về số lượng các từ là số có trong file
 
-	int getsum(String id) throws RemoteException;// trả về tổng giá trị các từ là số có trong file
+	int getsum(int id) throws RemoteException;// trả về tổng giá trị các từ là số có trong file
 
-	int getWords(String id) throws RemoteException;// trả về số lượng các từ k là số có trong file
+	int getWords(int id) throws RemoteException;// trả về số lượng các từ k là số có trong file
 
-	ArrayList<Integer> getNumList(String id) throws RemoteException; // trả về ds các từ số , mỗi số hiển thị 1 dòng
+	ArrayList<Integer> getNumList(int id) throws RemoteException; // trả về ds các từ số , mỗi số hiển thị 1 dòng
 }

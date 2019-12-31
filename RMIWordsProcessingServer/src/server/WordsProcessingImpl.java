@@ -1,6 +1,5 @@
 package server;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,34 +12,21 @@ import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.HashMap;
-
 import model.Data;
 import model.User;
 
 public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsProcessing {
 	private static final long serialVersionUID = 1L;
 	String dir = "D:\\Test";
-	// HashMap<String, File> file;
-	// HashMap<String, Text> text;
 
 	File fileIn;
-	BufferedReader read;
-	PrintWriter pw;
 	Data data = new Data();
 	ArrayList<User> listU = new ArrayList<>();
+	ArrayList<File> listFile = new ArrayList<>();
 
 	public WordsProcessingImpl() throws IOException {
 		this.data = new Data();
 		this.listU = data.listU();
-		try {
-			this.fileIn = new File(dir + File.separator + "data.txt");
-			this.fileIn.createNewFile();
-			this.read = new BufferedReader(new InputStreamReader(new FileInputStream(this.fileIn)));
-			this.pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(this.fileIn, true)), true);
-		} catch (FileNotFoundException e) {
-			throw new RemoteException(e.getMessage(), e);
-		}
 	}
 
 	@Override
@@ -58,18 +44,30 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 	}
 
 	@Override
-	public boolean checkPass(String username, String pass) throws RemoteException {
-		return data.checkPass(username, pass);
+	public int checkPass(String username, String pass) throws RemoteException {
+		try {
+			int count = 0;
+			if (data.checkPass(username, pass)) {
+				File temp = new File(dir + File.separator + "client-" + count++ + ".txt");
+				temp.createNewFile();
+				listFile.add(temp);
+			}
+			return listFile.size() - 1;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			return -1;
+		}
 	}
 
 	@Override
-	public boolean addFile(File file) throws RemoteException {
+	public boolean addFile(int id, File file) throws RemoteException {
 		try {
 			BufferedReader bis = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+			PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(listFile.get(id), true)),
+					true);
 			String line;
 			while ((line = bis.readLine()) != null) {
 				pw.println(line);
-				pw.flush();
 				System.out.println("line: " + line);
 			}
 			bis.close();
@@ -81,35 +79,39 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 	}
 
 	@Override
-	public boolean addText(String id, String text) throws RemoteException {
+	public boolean addText(int id, String text) throws RemoteException {
+		PrintWriter pw;
 		try {
+			pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(listFile.get(id), true)), true);
 			pw.println(text);
+			pw.close();
 			return true;
-		} catch (Exception e) {
-			return false;
+		} catch (FileNotFoundException e) {
+			System.out.println(e.getMessage());
 		}
+		return false;
 	}
 
 	@Override
-	public int getNums(String id) throws RemoteException {
+	public int getNums(int id) throws RemoteException {
 
 		return 0;
 	}
 
 	@Override
-	public int getsum(String id) throws RemoteException {
+	public int getsum(int id) throws RemoteException {
 
 		return 0;
 	}
 
 	@Override
-	public int getWords(String id) throws RemoteException {
+	public int getWords(int id) throws RemoteException {
 
 		return 0;
 	}
 
 	@Override
-	public ArrayList<Integer> getNumList(String id) throws RemoteException {
+	public ArrayList<Integer> getNumList(int id) throws RemoteException {
 
 		return null;
 	}

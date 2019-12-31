@@ -1,13 +1,8 @@
 package client;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
+import java.io.*;
+import java.rmi.*;
+import java.rmi.registry.*;
 import java.util.StringTokenizer;
 
 import server.IWordsProcessing;
@@ -19,6 +14,7 @@ public class Client {
 	private BufferedReader userIn;
 	String command;
 	String pagam;
+	int id;
 
 	private enum userStatus {
 		NOTLOGGEDIN, ENTEREDUSERNAME, LOGGEDIN
@@ -46,8 +42,7 @@ public class Client {
 				line = userIn.readLine();
 				token = new StringTokenizer(line);
 				command = token.nextToken();
-				// System.out.println("commad " + command + "listU " +
-				// word.checkUserExists("giang"));
+				pagam = token.nextToken();
 				// kết thúc
 				if (command.equalsIgnoreCase("QUIT")) {
 					registry.unbind("word");
@@ -58,7 +53,6 @@ public class Client {
 
 				if (currentUserStatus == userStatus.NOTLOGGEDIN) {
 					if (command.equalsIgnoreCase("USER")) {
-						pagam = token.nextToken();
 						if (word.checkUserExists(pagam) == true) {
 							userInput = pagam;
 							currentUserStatus = userStatus.ENTEREDUSERNAME;
@@ -70,8 +64,9 @@ public class Client {
 				// đã nhập user
 				if (currentUserStatus == userStatus.ENTEREDUSERNAME) {
 					if (command.equalsIgnoreCase("PASSWORD")) {
-						pagam = token.nextToken();
-						if (word.checkPass(userInput, pagam) == true) {
+						id = word.checkPass(userInput, pagam);
+						if (id != -1) {
+							// set id
 							currentUserStatus = userStatus.LOGGEDIN;
 							System.out.println("Login successfully!");
 						} else
@@ -87,21 +82,10 @@ public class Client {
 						System.out.println("You logged!");
 						break;
 					case "ADD_FILE":
-						pagam = token.nextToken();
-						System.out.println(pagam);
-						File file = new File(pagam);
-						if (word.addFile(file)) {
-							System.out.println("Added File!");
-						} else {
-							System.out.println("Add File failed!");
-						}
+						addFile();
 						break;
 					case "ADD_TEXT":
-						pagam = token.nextToken();
-						String p = pagam.toString();
-						System.out.println(pagam);
-						word.addText("0", p);
-						System.out.println("Added Text!");
+						addText();
 						break;
 
 					default:
@@ -111,8 +95,26 @@ public class Client {
 				}
 			}
 
-		} catch (Exception e) {
+		} catch (IOException e) {
 			System.out.println("Commad failed!");
+			System.out.println(e.getMessage());
+		}
+	}
+
+	private void addText() throws RemoteException {
+		String p = pagam.toString();
+		System.out.println(pagam);
+		word.addText(id, p);
+		System.out.println("Added Text!");
+	}
+
+	private void addFile() throws RemoteException {
+		// System.out.println(pagam);
+		File file = new File(pagam);
+		if (word.addFile(id, file)) {
+			System.out.println("Added File!");
+		} else {
+			System.out.println("Add File failed!");
 		}
 	}
 
