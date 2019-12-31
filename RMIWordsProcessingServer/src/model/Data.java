@@ -30,9 +30,9 @@ public class Data implements Serializable {
 
 	public boolean checkPass(String username, String pass) {
 		for (User u : listU) {
-			if (u.getName().equals(username) && u.getPassword().equals(pass)) {
+			if (u.getName().equals(username) && u.getPassword().equals(pass))
 				return true;
-			}
+
 		}
 		return false;
 	}
@@ -44,5 +44,6 @@ public class Data implements Serializable {
 			System.out.println(string);
 		}
 		System.out.println(d.checkUserExists("giang"));
+		System.out.println(d.checkPass("giang", "123"));
 	}
 }
