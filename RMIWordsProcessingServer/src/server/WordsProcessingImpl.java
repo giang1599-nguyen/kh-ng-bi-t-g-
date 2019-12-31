@@ -37,7 +37,7 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 			this.fileIn = new File(dir + File.separator + "data.txt");
 			this.fileIn.createNewFile();
 			this.read = new BufferedReader(new InputStreamReader(new FileInputStream(this.fileIn)));
-			this.pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(this.fileIn)), true);
+			this.pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(this.fileIn, true)), true);
 		} catch (FileNotFoundException e) {
 			throw new RemoteException(e.getMessage(), e);
 		}
