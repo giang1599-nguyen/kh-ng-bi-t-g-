@@ -12,6 +12,8 @@ import java.io.PrintWriter;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
+
 import model.Data;
 import model.User;
 
@@ -68,7 +70,7 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 			String line;
 			while ((line = bis.readLine()) != null) {
 				pw.println(line);
-				System.out.println("line: " + line);
+//				System.out.println("line: " + line);
 			}
 			bis.close();
 			return true;
@@ -94,8 +96,27 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 
 	@Override
 	public int getNums(int id) throws RemoteException {
+		int count = 0;
+		try {
+			BufferedReader bis = new BufferedReader(new InputStreamReader(new FileInputStream(listFile.get(id))));
+			String line;
+			while ((line = bis.readLine()) != null) {
+				StringTokenizer token = new StringTokenizer(line);
+				while (token.hasMoreTokens()) {
+					String word = token.nextToken();
+					try {
+						Integer.parseInt(word);
+						count++;
+					} catch (Exception e) {
+						System.out.println(e.getMessage());
+					}
+				}
+			}
 
-		return 0;
+		} catch (Exception e) {
+			throw new RemoteException(e.getMessage(), e);
+		}
+		return count;
 	}
 
 	@Override
