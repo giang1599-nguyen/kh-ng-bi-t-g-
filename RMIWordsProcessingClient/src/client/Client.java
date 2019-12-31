@@ -2,6 +2,7 @@
 import java.io.*;
 import java.rmi.*;
 import java.rmi.registry.*;
+import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import server.IWordsProcessing;
@@ -86,6 +87,18 @@ public class Client {
 					case "ADD_TEXT":
 						addText();
 						break;
+					case "GET_NUMS":
+						getNums();
+						break;
+					case "GET_SUM":
+						getSum();
+						break;
+					case "GET_NUM_LIST":
+						getNumList();
+						break;
+					case "GET_WORDS":
+						getWords();
+						break;
 
 					default:
 						System.out.println("Command not found!");
@@ -97,6 +110,42 @@ public class Client {
 		} catch (IOException e) {
 			System.out.println("Commad failed!");
 			System.out.println(e.getMessage());
+		}
+	}
+
+	private void getWords() throws RemoteException {
+		try {
+			System.out.println(word.getWords(id));
+		} catch (Exception e) {
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	private void getNumList() throws RemoteException {
+		try {
+
+			ArrayList<Integer> listNum = word.getNumList(id);
+			for (Integer integer : listNum) {
+				System.out.println(integer);
+			}
+		} catch (Exception e) {
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	private void getSum() throws RemoteException {
+		try {
+			System.out.println(word.getsum(id));
+		} catch (Exception e) {
+			throw new RemoteException(e.getMessage(), e);
+		}
+	}
+
+	private void getNums() throws RemoteException {
+		try {
+			System.out.println(word.getNums(id));
+		} catch (Exception e) {
+			throw new RemoteException(e.getMessage(), e);
 		}
 	}
 

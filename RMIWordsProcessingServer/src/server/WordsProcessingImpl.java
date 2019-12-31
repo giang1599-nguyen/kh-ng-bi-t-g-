@@ -25,6 +25,8 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 	Data data = new Data();
 	ArrayList<User> listU = new ArrayList<>();
 	ArrayList<File> listFile = new ArrayList<>();
+	private BufferedReader bis;
+	private PrintWriter pw;
 
 	public WordsProcessingImpl() throws IOException {
 		this.data = new Data();
@@ -64,13 +66,12 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 	@Override
 	public boolean addFile(int id, File file) throws RemoteException {
 		try {
-			BufferedReader bis = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-			PrintWriter pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(listFile.get(id), true)),
-					true);
+			bis = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+			pw = new PrintWriter(new OutputStreamWriter(new FileOutputStream(listFile.get(id), true)), true);
 			String line;
 			while ((line = bis.readLine()) != null) {
 				pw.println(line);
-//				System.out.println("line: " + line);
+				// System.out.println("line: " + line);
 			}
 			bis.close();
 			return true;
@@ -98,7 +99,7 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 	public int getNums(int id) throws RemoteException {
 		int count = 0;
 		try {
-			BufferedReader bis = new BufferedReader(new InputStreamReader(new FileInputStream(listFile.get(id))));
+			bis = new BufferedReader(new InputStreamReader(new FileInputStream(listFile.get(id))));
 			String line;
 			while ((line = bis.readLine()) != null) {
 				StringTokenizer token = new StringTokenizer(line);
@@ -112,7 +113,7 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 					}
 				}
 			}
-
+			bis.close();
 		} catch (Exception e) {
 			throw new RemoteException(e.getMessage(), e);
 		}
@@ -121,20 +122,78 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 
 	@Override
 	public int getsum(int id) throws RemoteException {
+		int sum = 0;
+		try {
+			bis = new BufferedReader(new InputStreamReader(new FileInputStream(listFile.get(id))));
+			String line;
+			while ((line = bis.readLine()) != null) {
+				StringTokenizer token = new StringTokenizer(line);
+				while (token.hasMoreTokens()) {
+					String word = token.nextToken();
+					try {
+						sum += Integer.parseInt(word);
+					} catch (Exception e) {
+						System.out.println(e.getMessage());
+					}
+				}
+			}
+			bis.close();
 
-		return 0;
+		} catch (Exception e) {
+			throw new RemoteException(e.getMessage(), e);
+		}
+		return sum;
 	}
 
 	@Override
 	public int getWords(int id) throws RemoteException {
+		int count = 0;
+		try {
+			bis = new BufferedReader(new InputStreamReader(new FileInputStream(listFile.get(id))));
+			String line;
+			while ((line = bis.readLine()) != null) {
+				StringTokenizer token = new StringTokenizer(line);
+				while (token.hasMoreTokens()) {
+					String word = token.nextToken();
+					try {
+						Integer.parseInt(word);
+					} catch (Exception e) {
+						count++;
+						System.out.println(e.getMessage());
+					}
+				}
+			}
+			bis.close();
 
-		return 0;
+		} catch (Exception e) {
+			throw new RemoteException(e.getMessage(), e);
+		}
+		return count;
 	}
 
 	@Override
 	public ArrayList<Integer> getNumList(int id) throws RemoteException {
+		ArrayList<Integer> listNum = new ArrayList<>();
+		try {
+			bis = new BufferedReader(new InputStreamReader(new FileInputStream(listFile.get(id))));
+			String line;
+			while ((line = bis.readLine()) != null) {
+				StringTokenizer token = new StringTokenizer(line);
+				while (token.hasMoreTokens()) {
+					String word = token.nextToken();
+					try {
+						listNum.add(Integer.parseInt(word));
+					} catch (Exception e) {
+						System.out.println(e.getMessage());
+					}
+				}
+			}
+			bis.close();
 
-		return null;
+		} catch (Exception e) {
+			throw new RemoteException(e.getMessage(), e);
+		}
+		return listNum;
 	}
 
 }
