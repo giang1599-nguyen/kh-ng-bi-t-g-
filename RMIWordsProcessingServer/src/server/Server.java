@@ -6,12 +6,12 @@ import java.rmi.registry.Registry;
 
 public class Server {
 	static final int PORT = 22222;
-	Registry regis;
+	Registry reg;
 	boolean running = true;
 
 	public Server() throws RemoteException {
 		try {
-			regis = LocateRegistry.createRegistry(PORT);
+			reg = LocateRegistry.createRegistry(PORT);
 		} catch (Exception e) {
 			System.out.println("Coundn't creat port!");
 			System.exit(-1);
@@ -19,10 +19,9 @@ public class Server {
 		try {
 			System.out.println("Server running with port: " + PORT);
 
-			while (running) {
 				IWordsProcessing word = new WordsProcessingImpl();
-				regis.rebind("word", word);
-			}
+				reg.rebind("word", word);
+			
 
 		} catch (Exception e) {
 			throw new RemoteException(e.getMessage(), e);

@@ -59,7 +59,8 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 			}
 			return listFile.size() - 1;
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
+			//System.out.println(e.getMessage());
+			throw new RemoteException(e.getMessage(), e);
 			return -1;
 		}
 	}
@@ -77,7 +78,7 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 			bis.close();
 			return true;
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new RemoteException(e.getMessage(), e);
 			return false;
 		}
 	}
@@ -92,6 +93,7 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 			return true;
 		} catch (FileNotFoundException e) {
 			System.out.println(e.getMessage());
+			throw new RemoteException(e.getMessage(), e);
 		}
 		return false;
 	}
@@ -111,6 +113,7 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 						count++;
 					} catch (Exception e) {
 						System.out.println(e.getMessage());
+						throw new RemoteException(e.getMessage(), e);
 					}
 				}
 			}
@@ -135,6 +138,7 @@ public class WordsProcessingImpl extends UnicastRemoteObject implements IWordsPr
 						sum += Integer.parseInt(word);
 					} catch (Exception e) {
 						System.out.println(e.getMessage());
+						throw new RemoteException(e.getMessage(), e);
 					}
 				}
 			}
